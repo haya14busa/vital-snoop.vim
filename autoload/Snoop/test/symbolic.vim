@@ -1,0 +1,1 @@
+/home/haya14busa/.vim/mybundle/vital-snoop.vim/autoload/Snoop/test/snoop.vim

@@ -1,0 +1,106 @@
+Describe snoop
+
+    Before all
+        let s:V = vital#of('vital')
+        let g:S = s:V.import('Vim.Snoop')
+    End
+
+    After all
+        unlet g:S
+    End
+
+    Context .sid()
+        It returns SID with relative path to &runtimepath
+            let sid = g:S.sid('test/files/snoop.vim')
+            Assert IsNumber(sid)
+            Assert NotEquals(sid, -1)
+        End
+        It returns SID with absolute path
+            let sid = g:S.sid(g:root . '/test/files/snoop.vim')
+            Assert IsNumber(sid)
+            Assert NotEquals(sid, -1)
+        End
+        It returns SID with unsourced autoload file (absolute path)
+            let g:Snoop#test#snoop#is_loaded = 0
+            Assert False(g:Snoop#test#snoop#is_loaded)
+            let sid = g:S.sid(g:root . '/autoload/Snoop/test/snoop.vim')
+            Assert IsNumber(sid)
+            Assert NotEquals(sid, -1)
+            Assert True(g:Snoop#test#snoop#is_loaded)
+        End
+        It returns SID with unsourced autoload file (relative path)
+            let g:Snoop#test#snoop_relative#is_loaded = 0
+            Assert False(g:Snoop#test#snoop_relative#is_loaded)
+            let sid = g:S.sid('autoload/Snoop/test/snoop_relative.vim')
+            Assert IsNumber(sid)
+            Assert NotEquals(sid, -1)
+            Assert True(g:Snoop#test#snoop_relative#is_loaded)
+        End
+        It returns SID with symbolic link (relative)
+            let sid = g:S.sid('autoload/Snoop/test/symbolic.vim')
+            Assert IsNumber(sid)
+            Assert NotEquals(sid, -1)
+        End
+        It returns SID with symbolic link (absolute)
+            let sid = g:S.sid(g:root . '/autoload/Snoop/test/symbolic.vim')
+            Assert IsNumber(sid)
+            Assert NotEquals(sid, -1)
+        End
+        It throws with wrong absolute path
+            Throws /vital: Snoop: file not found/ g:S.sid(g:root . '/test/files/notfound.vim')
+        End
+        It throws with wrong relative path
+            Throws /vital: Snoop: file not found/ g:S.sid('test/files/notfound.vim')
+        End
+    End
+
+    Context .sfunc()
+        It returns sfunc with relative path to &runtimepath
+            let sfunc = g:S.sfunc('test/files/snoop.vim')
+            Assert IsDict(sfunc)
+            Assert HasKey(sfunc, 'double')
+            Assert Equals(sfunc.double(3), 6)
+            Assert HasKey(sfunc, '_power', 'it handles underscore too')
+            Assert Equals(sfunc._power(3), 9)
+        End
+        It returns sfunc with absolute path
+            let sfunc = g:S.sfunc(g:root . '/test/files/snoop.vim')
+            Assert IsDict(sfunc)
+            Assert HasKey(sfunc, 'double')
+            Assert Equals(sfunc.double(3), 6)
+            Assert HasKey(sfunc, '_power', 'it handles underscore too')
+            Assert Equals(sfunc._power(3), 9)
+        End
+        It throws with wrong absolute path
+            Throws /vital: Snoop: file not found/ g:S.sfunc(g:root . '/test/files/notfound.vim')
+        End
+        It throws with wrong relative path
+            Throws /vital: Snoop: file not found/ g:S.sfunc('test/files/notfound.vim')
+        End
+    End
+
+    Context .sfunc_from_sid()
+        It returns sfunc with relative path to &runtimepath
+            let sfunc = g:S.sfunc_from_sid(g:S.sid('test/files/snoop.vim'))
+            Assert IsDict(sfunc)
+            Assert HasKey(sfunc, 'double')
+            Assert Equals(sfunc.double(3), 6)
+            Assert HasKey(sfunc, '_power', 'it handles underscore too')
+            Assert Equals(sfunc._power(3), 9)
+        End
+    End
+
+    Context .scriptnames()
+        It returns scriptnames dict
+            let sns = g:S.scriptnames()
+            Assert IsDict(sns)
+            Assert HasKey(sns, '1')
+            for k in keys(sns)
+                Assert True(k > 0)
+                Assert IsDict(g:S.sfunc_from_sid(k))
+            endfor
+        End
+    End
+
+End
+
