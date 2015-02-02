@@ -7,9 +7,6 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:TRUE = !0
-let s:FALSE = 0
-
 """ Helper:
 
 function! s:_throw(message) abort
