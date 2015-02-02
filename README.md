@@ -33,7 +33,7 @@ Plug 'haya14busa/vital-snoop.vim'
 See `:Vitalize` for more information.
 
 ```vim
-:Vitalize . --name={plugin_name} Data.String.Interpolation
+:Vitalize . --name={plugin_name} Vim.Snoop
 ```
 
 ### 3. You can update vital-snoop.vim with :Vitalize.
