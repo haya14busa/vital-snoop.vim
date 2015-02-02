@@ -113,16 +113,35 @@ endfunction
 " :echo s:sid2sfunc(1)
 " " => { 'fname1': funcref1, 'fname2': funcref2, ...}
 " " The file whose SID is 1 may be your vimrc
-function! s:sid2sfunc(sid) abort
-  let sprefix = s:_sprefix(a:sid)
-  ":h :function /{pattern}
-  let fs = s:_capture_line(':function ' . printf("/\<SNR>%s_", a:sid))
-  let r = {}
-  for fname in map(fs, "matchstr(v:val, printf('\\m^function\\s%s\\zs.\\{-}\\ze(', sprefix))")
-    let r[fname] = function(sprefix . fname)
-  endfor
-  return r
-endfunction
+if exists('+regexpengine') && s:FALSE
+  function! s:sid2sfunc(sid) abort
+    let sprefix = s:_sprefix(a:sid)
+    ":h :function /{pattern}
+    let regexpengine_save = &regexpengine
+    let &regexpengine = 2
+    try
+      let fs = s:_capture_line(':function ' . printf("/\<SNR>%s_", a:sid))
+    finally
+      let &regexpengine = regexpengine_save
+    endtry
+    let r = {}
+    for fname in map(fs, "matchstr(v:val, printf('\\m^function\\s%s\\zs.\\{-}\\ze(', sprefix))")
+      let r[fname] = function(sprefix . fname)
+    endfor
+    return r
+  endfunction
+else
+  " :function /<SNR><SID>_ doesn't work
+  function! s:sid2sfunc(sid) abort
+    let sprefix = s:_sprefix(a:sid)
+    let fs = s:_capture_line(':function ' . printf("/%s_", a:sid))
+    let r = {}
+    for fname in filter(map(fs, "matchstr(v:val, printf('\\m^function\\s[^0-9]\\+%d_\\zs.\\{-}\\ze(', a:sid))"), "v:val !=# ''")
+      let r[fname] = function(sprefix . fname)
+    endfor
+    return r
+  endfunction
+endif
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
