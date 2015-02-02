@@ -37,11 +37,13 @@ Describe snoop
             Assert True(g:Snoop#test#snoop_relative#is_loaded)
         End
         It returns SID with symbolic link (relative)
+            Skip 'symbolic link cannot be tests with different environment'
             let sid = g:S.sid('autoload/Snoop/test/symbolic.vim')
             Assert IsNumber(sid)
             Assert NotEquals(sid, -1)
         End
         It returns SID with symbolic link (absolute)
+            Skip 'symbolic link cannot be tests with different environment'
             let sid = g:S.sid(g:root . '/autoload/Snoop/test/symbolic.vim')
             Assert IsNumber(sid)
             Assert NotEquals(sid, -1)
