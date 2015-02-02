@@ -50,7 +50,7 @@ INTRODUCTION				*Vital.Vim.Snoop-introduction*
 	" => <SID>
 	"" Get the dict which contains script local functions with absolute
 	" path
-	:let sf = s:S.sfunc('~/.vim/bundle/vital-snoop/test/files/snoop.vim')
+	:let sf = s:S.sfunc('~/.vim/bundle/vital-snoop.vim/test/files/snoop.vim')
 	:echo sf
 	" =>
 	"  {
@@ -117,7 +117,7 @@ sfunc({path})					*Vital.Vim.Snoop.sfunc()*
 >
 	"" Get the dict which contains script local functions with absolute
 	" path
-	:let sf = s:S.sfunc('~/.vim/bundle/vital-snoop/test/files/snoop.vim')
+	:let sf = s:S.sfunc('~/.vim/bundle/vital-snoop.vim/test/files/snoop.vim')
 	:echo sf
 	" =>
 	"  {
