@@ -1,7 +1,7 @@
 *vital-snoop.txt*	Snoop script-local functions
 
 Author  : haya14busa <hayabusa1419@gmail.com>
-Version : 0.9.0
+Version : 0.9.1
 License : MIT license {{{
 
 	Copyright (c) 2015 haya14busa
@@ -143,6 +143,9 @@ scriptnames()					*Vital.Vim.Snoop.sriptnames()*
 
 ==============================================================================
 CHANGELOG				 *Vital.Vim.Snoop-changelog*
+
+0.9.1	2015-02-03
+	- Support old vim which doens't have |'regexpengine'|.
 
 0.9.0	2015-02-03
 	- Init.
