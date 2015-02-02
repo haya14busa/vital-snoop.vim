@@ -79,9 +79,9 @@ Describe snoop
         End
     End
 
-    Context .sfunc_from_sid()
+    Context .sid2sfunc()
         It returns sfunc with relative path to &runtimepath
-            let sfunc = g:S.sfunc_from_sid(g:S.sid('test/files/snoop.vim'))
+            let sfunc = g:S.sid2sfunc(g:S.sid('test/files/snoop.vim'))
             Assert IsDict(sfunc)
             Assert HasKey(sfunc, 'double')
             Assert Equals(sfunc.double(3), 6)
@@ -97,7 +97,7 @@ Describe snoop
             Assert HasKey(sns, '1')
             for k in keys(sns)
                 Assert True(k > 0)
-                Assert IsDict(g:S.sfunc_from_sid(k))
+                Assert IsDict(g:S.sid2sfunc(k))
             endfor
         End
     End

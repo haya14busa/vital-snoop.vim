@@ -106,15 +106,15 @@ endfunction
 " " => { 'fname1': funcref1, 'fname2': funcref2, ...}
 function! s:sfunc(path) abort
   let sid = s:sid(a:path)
-  return s:sfunc_from_sid(sid)
+  return s:sid2sfunc(sid)
 endfunction
 
 "" Return a dict which contains script-local functions from SID
 " USAGE:
-" :echo s:sfunc_from_sid(1)
+" :echo s:sid2sfunc(1)
 " " => { 'fname1': funcref1, 'fname2': funcref2, ...}
 " " The file whose SID is 1 may be your vimrc
-function! s:sfunc_from_sid(sid) abort
+function! s:sid2sfunc(sid) abort
   let sprefix = s:_sprefix(a:sid)
   ":h :function /{pattern}
   let fs = s:_capture_line(':function ' . printf("/\<SNR>%s_", a:sid))
