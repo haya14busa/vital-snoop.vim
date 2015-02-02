@@ -1,0 +1,152 @@
+*vital-snoop.txt*	Snoop script-local functions
+
+Author  : haya14busa <hayabusa1419@gmail.com>
+Version : 0.9.0
+License : MIT license {{{
+
+	Copyright (c) 2015 haya14busa
+
+	Permission is hereby granted, free of charge, to any person obtaining
+	a copy of this software and associated documentation files (the
+	"Software"), to deal in the Software without restriction, including
+	without limitation the rights to use, copy, modify, merge, publish,
+	distribute, sublicense, and/or sell copies of the Software, and to
+	permit persons to whom the Software is furnished to do so, subject to
+	the following conditions:
+	The above copyright notice and this permission notice shall be
+	included in all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+	IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+	CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+	TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+}}}
+
+==============================================================================
+CONTENTS				*Vital.Vim.Snoop-contents*
+
+	INTRODUCTION		|Vital.Vim.Snoop-introduction|
+	INSTALLATION		|Vital.Vim.Snoop-installation|
+	INTERFACE		|Vital.Vim.Snoop-interface|
+	Functions		  |Vital.Vim.Snoop-functions|
+
+==============================================================================
+INTRODUCTION				*Vital.Vim.Snoop-introduction*
+
+	*Vital.Vim.Snoop* ( *vital-snoop.vim* ) provides a way to snoop script
+	local functions.
+>
+	let s:V = vital#of('vital')
+	let s:S = s:V.import('Vim.Snoop')
+>
+	"" Get <SID> with relative path to &runtimepath
+	" e.g. starts with autoload/, plugin/, etc...
+	" (autoload/**/.vim, plugin/**/.vim)
+	:echo s:S.sid('autoload/Snoop/test/snoop_relative.vim')
+	" => <SID>
+	"" Get the dict which contains script local functions with absolute
+	" path
+	:let sf = s:S.sfunc('~/.vim/bundle/vital-snoop/test/files/snoop.vim')
+	:echo sf
+	" =>
+	"  {
+	"   'double': function('<SNR>439_double'),
+	"   '_power': function('<SNR>439__power')
+	"  }
+	:echo sf.double(3) | " => 6
+	:echo sf._power(3) | " => 9
+
+==============================================================================
+INSTALLATION				*Vital.Vim.Snoop-installation*
+
+	1. Install |vital.vim| and |vital-snoop| with your
+	favorite plugin manager.
+>
+		NeoBundle 'vim-jp/vital.vim'
+		NeoBundle 'haya14busa/vital-snoop'
+
+		Plugin 'vim-jp/vital.vim'
+		Plugin 'haya14busa/vital-snoop'
+
+		Plug 'vim-jp/vital.vim'
+		Plug 'haya14busa/vital-snoop'
+<
+	2. Embed vital-snoop into your plugin with |:Vitalize|
+	(assume current directory is the root of your plugin repository).
+	See |:Vitalize| for more information. >
+	    :Vitalize . --name={plugin_name} Vim.Snoop
+<
+	3. You can update vital-snoop with |:Vitalize|. >
+	    :Vitalize .
+<
+
+==============================================================================
+INTERFACE				*Vital.Vim.Snoop-interface*
+------------------------------------------------------------------------------
+FUNCTIONS				*Vital.Vim.Snoop-functions*
+
+sid({path})					*Vital.Vim.Snoop.sid()*
+	Returns <SID> with given path. {path} could be relative to
+	'runtimepath' or absolute path.
+
+						*Vital.Vim.Snoop-path*
+	{path} example
+	1. /home/haya14busa/.vim/bundle/incsearch.vim/autoload/incsearch.vim
+	2. ~/.vim/bundle/incsearch.vim/autoload/incsearch.vim
+	3. autoload/incsearch.vim
+	4. plugin/incsearch.vim
+
+	You can pass paths which starts with autoload/, plugin/, etc... as a
+	relative path (relative to 'runtimepath').
+	NOTE: _relative_ doesn't mean relative to current file, but relative
+	to 'runtimepath'.
+>
+	"" Get <SID> with relative path to &runtimepath
+	" e.g. starts with autoload/, plugin/, etc...
+	" (autoload/**/.vim, plugin/**/.vim)
+	:echo s:S.sid('autoload/Snoop/test/snoop_relative.vim')
+	" => <SID>
+
+sfunc({path})					*Vital.Vim.Snoop.sfunc()*
+	Returns a dict which contains |script-local| functions with {path}
+	(See |Vital.Vim.Snoop-path|).
+>
+	"" Get the dict which contains script local functions with absolute
+	" path
+	:let sf = s:S.sfunc('~/.vim/bundle/vital-snoop/test/files/snoop.vim')
+	:echo sf
+	" =>
+	"  {
+	"   'double': function('<SNR>439_double'),
+	"   '_power': function('<SNR>439__power')
+	"  }
+	:echo sf.double(3) | " => 6
+	:echo sf._power(3) | " => 9
+
+sid2sfunc(<SID>)				*Vital.Vim.Snoop.sid2sfunc()*
+	Returns a dict which contains |script-local| functions with <SID>.
+>
+	:echo s:S.sid2sfunc(1)
+	" => { 'fname1': funcref1, 'fname2': funcref2, ...}
+	" The file whose SID is 1 may be your vimrc
+
+scriptnames()					*Vital.Vim.Snoop.sriptnames()*
+	Returns a dict of |:scriptnames|. The keys is <SID> and the values is
+	paths. >
+	    " { <SID>: path/to/the/file }
+	      {'1': path1, '2': path2, '3': path3, ... }
+
+
+==============================================================================
+CHANGELOG				 *Vital.Vim.Snoop-changelog*
+
+0.9.0	2015-02-03
+	- Init.
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:fdm=marker:
+
