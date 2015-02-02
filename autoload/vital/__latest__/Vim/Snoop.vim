@@ -113,7 +113,7 @@ endfunction
 " :echo s:sid2sfunc(1)
 " " => { 'fname1': funcref1, 'fname2': funcref2, ...}
 " " The file whose SID is 1 may be your vimrc
-if exists('+regexpengine') && s:FALSE
+if exists('+regexpengine')
   function! s:sid2sfunc(sid) abort
     let sprefix = s:_sprefix(a:sid)
     ":h :function /{pattern}
