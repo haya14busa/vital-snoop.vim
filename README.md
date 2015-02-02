@@ -57,7 +57,7 @@ let s:S = s:V.import('Vim.Snoop')
 
 "" Get the dict which contains script local functions with absolute
 " path
-:let sf = s:S.sfunc('~/.vim/bundle/vital-snoop/test/files/snoop.vim')
+:let sf = s:S.sfunc('~/.vim/bundle/vital-snoop.vim/test/files/snoop.vim')
 :echo sf
 " =>
 "  {
