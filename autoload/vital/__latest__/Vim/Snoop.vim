@@ -105,8 +105,7 @@ endfunction
 " :echo s:sfunc_rtp('autoload/plugname.vim')
 " " => { 'fname1': funcref1, 'fname2': funcref2, ...}
 function! s:sfunc(path) abort
-  let sid = s:sid(a:path)
-  return s:sid2sfunc(sid)
+  return s:sid2sfunc(s:sid(a:path))
 endfunction
 
 "" Return a dict which contains script-local functions from SID
