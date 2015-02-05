@@ -132,7 +132,7 @@ else
     let fs = s:_capture_line(':function ' . printf("/%s_", a:sid))
     let r = {}
     " \<SNR> =~# "\x80\xfdR" but old regexpengine doesn't handle this regex.
-    for fname in filter(map(fs, "matchstr(v:val, printf('\\m^function\\s\W\WR%d_\\zs.\\{-}\\ze(', a:sid))"), "v:val !=# ''")
+    for fname in filter(map(fs, "matchstr(v:val, printf('\\m^function\\s\\W\\WR%d_\\zs.\\{-}\\ze(', a:sid))"), "v:val !=# ''")
       let r[fname] = function(sprefix . fname)
     endfor
     return r
