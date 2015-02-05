@@ -114,14 +114,12 @@ if exists('+regexpengine')
   function! s:sid2sfunc(sid) abort
     let sprefix = s:_sprefix(a:sid)
     ":h :function /{pattern}
-    let regexpengine_save = &regexpengine
-    let &regexpengine = 2
-    try
-      let fs = s:_capture_line(':function ' . printf("/\<SNR>%s_", a:sid))
-    finally
-      let &regexpengine = regexpengine_save
-    endtry
+    " -> _________________
+    "    function <SNR>14_functionname(args, ...)
+    let fs = s:_capture_line(':function ' . printf("/\\%%#=2\<SNR>%s_", a:sid))
     let r = {}
+    " ->                  ____________
+    "    function <SNR>14_functionname(args, ...)
     for fname in map(fs, "matchstr(v:val, printf('\\m^function\\s%s\\zs.\\{-}\\ze(', sprefix))")
       let r[fname] = function(sprefix . fname)
     endfor
