@@ -116,11 +116,11 @@ if exists('+regexpengine')
     ":h :function /{pattern}
     " -> _________________
     "    function <SNR>14_functionname(args, ...)
-    let fs = s:_capture_line(':function ' . printf("/\\%%#=2\<SNR>%s_", a:sid))
+    let fs = s:_capture_line(':function ' . printf("/\\%%#=2^\<SNR>%s_", a:sid))
     let r = {}
     " ->                  ____________
     "    function <SNR>14_functionname(args, ...)
-    for fname in map(fs, "matchstr(v:val, printf('\\m^function\\s%s\\zs.\\{-}\\ze(', sprefix))")
+    for fname in map(fs, "matchstr(v:val, printf('\\m^function\\s<SNR>%d_\\zs\\w\\{-}\\ze(', a:sid))")
       let r[fname] = function(sprefix . fname)
     endfor
     return r
@@ -129,10 +129,10 @@ else
   " :function /<SNR><SID>_ doesn't work
   function! s:sid2sfunc(sid) abort
     let sprefix = s:_sprefix(a:sid)
-    let fs = s:_capture_line(':function ' . printf("/%s_", a:sid))
-    let r = {}
     " \<SNR> =~# "\x80\xfdR" but old regexpengine doesn't handle this regex.
-    for fname in filter(map(fs, "matchstr(v:val, printf('\\m^function\\s\\W\\WR%d_\\zs.\\{-}\\ze(', a:sid))"), "v:val !=# ''")
+    let fs = s:_capture_line(':function ' . printf('/^\W\WR%s_', a:sid))
+    let r = {}
+    for fname in filter(map(fs, "matchstr(v:val, printf('\\m^function\\s<SNR>%d_\\zs\\w\\{-}\\ze(', a:sid))"), "v:val !=# ''")
       let r[fname] = function(sprefix . fname)
     endfor
     return r
