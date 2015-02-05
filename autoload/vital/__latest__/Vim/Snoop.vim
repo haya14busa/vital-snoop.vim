@@ -86,7 +86,7 @@ function! s:_sid(abspath, scriptnames) abort
   let tp = resolve(simplify(a:abspath)) " target path
   for sid in keys(a:scriptnames)
     " NOTE: is simplify() necessary?
-    if tp =~# simplify(expand(a:scriptnames[sid]))
+    if tp is# simplify(expand(a:scriptnames[sid]))
       return str2nr(sid)
     endif
   endfor
