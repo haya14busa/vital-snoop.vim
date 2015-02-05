@@ -131,7 +131,8 @@ else
     let sprefix = s:_sprefix(a:sid)
     let fs = s:_capture_line(':function ' . printf("/%s_", a:sid))
     let r = {}
-    for fname in filter(map(fs, "matchstr(v:val, printf('\\m^function\\s[^0-9]\\+%d_\\zs.\\{-}\\ze(', a:sid))"), "v:val !=# ''")
+    " \<SNR> =~# "\x80\xfdR" but old regexpengine doesn't handle this regex.
+    for fname in filter(map(fs, "matchstr(v:val, printf('\\m^function\\s\W\WR%d_\\zs.\\{-}\\ze(', a:sid))"), "v:val !=# ''")
       let r[fname] = function(sprefix . fname)
     endfor
     return r
