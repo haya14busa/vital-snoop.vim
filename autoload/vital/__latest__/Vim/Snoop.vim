@@ -97,9 +97,9 @@ endfunction
 " `path` should be absolute path or relative to &runtimepath
 " @return {funcname: funcref, funcname2: funcref2, ...}
 " USAGE:
-" :echo s:sfunc('~/.vim/bundle/plugname/autoload/plugname.vim')
+" :echo s:sfuncs('~/.vim/bundle/plugname/autoload/plugname.vim')
 " " => { 'fname1': funcref1, 'fname2': funcref2, ...}
-" :echo s:sfunc('autoload/plugname.vim')
+" :echo s:sfuncs('autoload/plugname.vim')
 " " => { 'fname1': funcref1, 'fname2': funcref2, ...}
 function! s:sfuncs(path) abort
   return s:sid2sfuncs(s:sid(a:path))
