@@ -70,39 +70,39 @@ Describe snoop
         End
     End
 
-    Context .sfunc()
-        It returns sfunc with relative path to &runtimepath
-            let sfunc = g:S.sfunc('test/files/snoop.vim')
-            Assert IsDict(sfunc)
-            Assert HasKey(sfunc, 'double')
-            Assert Equals(sfunc.double(3), 6)
-            Assert HasKey(sfunc, '_power', 'it handles underscore too')
-            Assert Equals(sfunc._power(3), 9)
+    Context .sfuncs()
+        It returns sfuncs with relative path to &runtimepath
+            let sfuncs = g:S.sfuncs('test/files/snoop.vim')
+            Assert IsDict(sfuncs)
+            Assert HasKey(sfuncs, 'double')
+            Assert Equals(sfuncs.double(3), 6)
+            Assert HasKey(sfuncs, '_power', 'it handles underscore too')
+            Assert Equals(sfuncs._power(3), 9)
         End
-        It returns sfunc with absolute path
-            let sfunc = g:S.sfunc(g:root . '/test/files/snoop.vim')
-            Assert IsDict(sfunc)
-            Assert HasKey(sfunc, 'double')
-            Assert Equals(sfunc.double(3), 6)
-            Assert HasKey(sfunc, '_power', 'it handles underscore too')
-            Assert Equals(sfunc._power(3), 9)
+        It returns sfuncs with absolute path
+            let sfuncs = g:S.sfuncs(g:root . '/test/files/snoop.vim')
+            Assert IsDict(sfuncs)
+            Assert HasKey(sfuncs, 'double')
+            Assert Equals(sfuncs.double(3), 6)
+            Assert HasKey(sfuncs, '_power', 'it handles underscore too')
+            Assert Equals(sfuncs._power(3), 9)
         End
         It throws with wrong absolute path
-            Throws /vital: Snoop: file not found/ g:S.sfunc(g:root . '/test/files/notfound.vim')
+            Throws /vital: Snoop: file not found/ g:S.sfuncs(g:root . '/test/files/notfound.vim')
         End
         It throws with wrong relative path
-            Throws /vital: Snoop: file not found/ g:S.sfunc('test/files/notfound.vim')
+            Throws /vital: Snoop: file not found/ g:S.sfuncs('test/files/notfound.vim')
         End
     End
 
-    Context .sid2sfunc()
-        It returns sfunc with relative path to &runtimepath
-            let sfunc = g:S.sid2sfunc(g:S.sid('test/files/snoop.vim'))
-            Assert IsDict(sfunc)
-            Assert HasKey(sfunc, 'double')
-            Assert Equals(sfunc.double(3), 6)
-            Assert HasKey(sfunc, '_power', 'it handles underscore too')
-            Assert Equals(sfunc._power(3), 9)
+    Context .sid2sfuncs()
+        It returns sfuncs with relative path to &runtimepath
+            let sfuncs = g:S.sid2sfuncs(g:S.sid('test/files/snoop.vim'))
+            Assert IsDict(sfuncs)
+            Assert HasKey(sfuncs, 'double')
+            Assert Equals(sfuncs.double(3), 6)
+            Assert HasKey(sfuncs, '_power', 'it handles underscore too')
+            Assert Equals(sfuncs._power(3), 9)
         End
     End
 
@@ -113,7 +113,7 @@ Describe snoop
             Assert HasKey(sns, '1')
             for k in keys(sns)
                 Assert True(k > 0)
-                Assert IsDict(g:S.sid2sfunc(k))
+                Assert IsDict(g:S.sid2sfuncs(k))
             endfor
         End
     End

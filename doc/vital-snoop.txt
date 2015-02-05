@@ -50,7 +50,7 @@ INTRODUCTION				*Vital.Vim.Snoop-introduction*
 	" => <SID>
 	"" Get the dict which contains script local functions with absolute
 	" path
-	:let sf = s:S.sfunc('~/.vim/bundle/vital-snoop.vim/test/files/snoop.vim')
+	:let sf = s:S.sfuncs('~/.vim/bundle/vital-snoop.vim/test/files/snoop.vim')
 	:echo sf
 	" =>
 	"  {
@@ -111,13 +111,13 @@ sid({path})					*Vital.Vim.Snoop.sid()*
 	:echo s:S.sid('autoload/Snoop/test/snoop_relative.vim')
 	" => <SID>
 
-sfunc({path})					*Vital.Vim.Snoop.sfunc()*
+sfuncs({path})					*Vital.Vim.Snoop.sfuncs()*
 	Returns a dict which contains |script-local| functions with {path}
 	(See |Vital.Vim.Snoop-path|).
 >
 	"" Get the dict which contains script local functions with absolute
 	" path
-	:let sf = s:S.sfunc('~/.vim/bundle/vital-snoop.vim/test/files/snoop.vim')
+	:let sf = s:S.sfuncs('~/.vim/bundle/vital-snoop.vim/test/files/snoop.vim')
 	:echo sf
 	" =>
 	"  {
@@ -127,10 +127,10 @@ sfunc({path})					*Vital.Vim.Snoop.sfunc()*
 	:echo sf.double(3) | " => 6
 	:echo sf._power(3) | " => 9
 
-sid2sfunc(<SID>)				*Vital.Vim.Snoop.sid2sfunc()*
+sid2sfuncs(<SID>)				*Vital.Vim.Snoop.sid2sfuncs()*
 	Returns a dict which contains |script-local| functions with <SID>.
 >
-	:echo s:S.sid2sfunc(1)
+	:echo s:S.sid2sfuncs(1)
 	" => { 'fname1': funcref1, 'fname2': funcref2, ...}
 	" The file whose SID is 1 may be your vimrc
 

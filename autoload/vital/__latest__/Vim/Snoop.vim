@@ -97,21 +97,21 @@ endfunction
 " `path` should be absolute path or relative to &runtimepath
 " @return {funcname: funcref, funcname2: funcref2, ...}
 " USAGE:
-" :echo s:sfunc_rtp('~/.vim/bundle/plugname/autoload/plugname.vim')
+" :echo s:sfunc('~/.vim/bundle/plugname/autoload/plugname.vim')
 " " => { 'fname1': funcref1, 'fname2': funcref2, ...}
-" :echo s:sfunc_rtp('autoload/plugname.vim')
+" :echo s:sfunc('autoload/plugname.vim')
 " " => { 'fname1': funcref1, 'fname2': funcref2, ...}
-function! s:sfunc(path) abort
-  return s:sid2sfunc(s:sid(a:path))
+function! s:sfuncs(path) abort
+  return s:sid2sfuncs(s:sid(a:path))
 endfunction
 
 "" Return a dict which contains script-local functions from SID
 " USAGE:
-" :echo s:sid2sfunc(1)
+" :echo s:sid2sfuncs(1)
 " " => { 'fname1': funcref1, 'fname2': funcref2, ...}
 " " The file whose SID is 1 may be your vimrc
 if exists('+regexpengine')
-  function! s:sid2sfunc(sid) abort
+  function! s:sid2sfuncs(sid) abort
     let sprefix = s:_sprefix(a:sid)
     ":h :function /{pattern}
     " -> _________________
@@ -127,7 +127,7 @@ if exists('+regexpengine')
   endfunction
 else
   " :function /<SNR><SID>_ doesn't work
-  function! s:sid2sfunc(sid) abort
+  function! s:sid2sfuncs(sid) abort
     let sprefix = s:_sprefix(a:sid)
     " \<SNR> =~# "\x80\xfdR" but old regexpengine doesn't handle this regex.
     let fs = s:_capture_lines(':function ' . printf('/^\W\WR%s_', a:sid))
