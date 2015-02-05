@@ -28,7 +28,7 @@ function! s:_capture(command) abort
 endfunction
 
 "" Capture command and return lines
-function! s:_capture_line(command) abort
+function! s:_capture_lines(command) abort
   return split(s:_capture(a:command), "\n")
 endfunction
 
@@ -52,7 +52,7 @@ endfunction
 " @return {sid1: path1, sid2: path2, ...}
 function! s:scriptnames() abort
   let sdict = {} " { sid: path }
-  for line in s:_capture_line(':scriptnames')
+  for line in s:_capture_lines(':scriptnames')
     let [sid, path] = split(line, '\m^\s*\d\+\zs:\s\ze')
     let sdict[str2nr(sid)] = path " str2nr(): '  1' -> 1
   endfor
@@ -116,7 +116,7 @@ if exists('+regexpengine')
     ":h :function /{pattern}
     " -> _________________
     "    function <SNR>14_functionname(args, ...)
-    let fs = s:_capture_line(':function ' . printf("/\\%%#=2^\<SNR>%s_", a:sid))
+    let fs = s:_capture_lines(':function ' . printf("/\\%%#=2^\<SNR>%s_", a:sid))
     let r = {}
     " ->                  ____________
     "    function <SNR>14_functionname(args, ...)
@@ -130,7 +130,7 @@ else
   function! s:sid2sfunc(sid) abort
     let sprefix = s:_sprefix(a:sid)
     " \<SNR> =~# "\x80\xfdR" but old regexpengine doesn't handle this regex.
-    let fs = s:_capture_line(':function ' . printf('/^\W\WR%s_', a:sid))
+    let fs = s:_capture_lines(':function ' . printf('/^\W\WR%s_', a:sid))
     let r = {}
     for fname in filter(map(fs, "matchstr(v:val, printf('\\m^function\\s<SNR>%d_\\zs\\w\\{-}\\ze(', a:sid))"), "v:val !=# ''")
       let r[fname] = function(sprefix . fname)
