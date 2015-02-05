@@ -48,6 +48,20 @@ Describe snoop
             Assert IsNumber(sid)
             Assert NotEquals(sid, -1)
         End
+        It handle the case &regexpengine == 1
+            if !exists('+regexpengine')
+                Skip 'regexpengine option doesn''t exist'
+            endif
+            let regexpengine_save = &regexpengine
+            let &regexpengine = 1
+            try
+                let sid = g:S.sid('test/files/snoop.vim')
+                Assert IsNumber(sid)
+                Assert NotEquals(sid, -1)
+            finally
+                let &regexpengine = regexpengine_save
+            endtry
+        End
         It throws with wrong absolute path
             Throws /vital: Snoop: file not found/ g:S.sid(g:root . '/test/files/notfound.vim')
         End
