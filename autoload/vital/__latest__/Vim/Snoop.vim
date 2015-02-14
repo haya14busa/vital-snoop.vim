@@ -111,34 +111,26 @@ endfunction
 " :echo s:sid2sfuncs(1)
 " " => { 'fname1': funcref1, 'fname2': funcref2, ...}
 " " The file whose SID is 1 may be your vimrc
-if exists('+regexpengine')
-  function! s:sid2sfuncs(sid) abort
-    let sprefix = s:_sprefix(a:sid)
-    ":h :function /{pattern}
-    " -> _________________
-    "    function <SNR>14_functionname(args, ...)
-    let fs = s:_capture_lines(':function ' . printf("/\\%%#=2^\<SNR>%s_", a:sid))
-    let r = {}
-    " ->                  ____________
-    "    function <SNR>14_functionname(args, ...)
-    for fname in map(fs, "matchstr(v:val, printf('\\m^function\\s<SNR>%d_\\zs\\w\\{-}\\ze(', a:sid))")
-      let r[fname] = function(sprefix . fname)
-    endfor
-    return r
-  endfunction
-else
-  " :function /<SNR><SID>_ doesn't work
-  function! s:sid2sfuncs(sid) abort
-    let sprefix = s:_sprefix(a:sid)
-    " \<SNR> =~# "\x80\xfdR" but old regexpengine doesn't handle this regex.
-    let fs = s:_capture_lines(':function ' . printf('/^\W\WR%s_', a:sid))
-    let r = {}
-    for fname in filter(map(fs, "matchstr(v:val, printf('\\m^function\\s<SNR>%d_\\zs\\w\\{-}\\ze(', a:sid))"), "v:val !=# ''")
-      let r[fname] = function(sprefix . fname)
-    endfor
-    return r
-  endfunction
-endif
+" NOTE: old regexpengine has a bug which returns 0 with
+" :echo "\<SNR>" =~# "\\%#=1\x80\xfdR"     | " => 0
+" But it matches correctly with :h /collection
+" :echo "\<SNR>" =~# "\\%#=1[\x80][\xfd]R" | " => 1
+" http://lingr.com/room/vim/archives/2015/02/13#message-21261450
+let s:SNR = "[\x80][\xfd]R"
+function! s:sid2sfuncs(sid) abort
+  let sprefix = s:_sprefix(a:sid)
+  ":h :function /{pattern}
+  " ->         ^________
+  "    function <SNR>14_functionname(args, ...)
+  let fs = s:_capture_lines(':function ' . printf("/^%s%s_", s:SNR, a:sid))
+  let r = {}
+  " ->         ^--------____________-
+  "    function <SNR>14_functionname(args, ...)
+  for fname in map(fs, "matchstr(v:val, printf('\\m^function\\s<SNR>%d_\\zs\\w\\{-}\\ze(', a:sid))")
+    let r[fname] = function(sprefix . fname)
+  endfor
+  return r
+endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
