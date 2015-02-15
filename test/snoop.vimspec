@@ -2,6 +2,7 @@ Describe snoop
 
     Before all
         let s:V = vital#of('vital')
+        let s:P = s:V.import('Prelude')
         let g:S = s:V.import('Vim.Snoop')
     End
 
@@ -37,11 +38,17 @@ Describe snoop
             Assert True(g:Snoop#test#snoop_relative#is_loaded)
         End
         It returns SID with symbolic link (relative)
+            if s:P.is_windows()
+                Skip "windows doesn't handle symlink"
+            endif
             let sid = g:S.sid('autoload/Snoop/test/snoop_symbolic.vim')
             Assert IsNumber(sid)
             Assert NotEquals(sid, -1)
         End
         It returns SID with symbolic link (absolute)
+            if s:P.is_windows()
+                Skip "windows doesn't handle symlink"
+            endif
             let sid = g:S.sid(g:root . '/autoload/Snoop/test/snoop_symbolic.vim')
             Assert IsNumber(sid)
             Assert NotEquals(sid, -1)
